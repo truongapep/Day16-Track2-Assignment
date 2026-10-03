@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS Region"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-southeast-2"
 }
 
 variable "hf_token" {
@@ -33,4 +33,15 @@ variable "gpu_instance_type" {
   description = "Instance type for the optional GPU (vLLM) compute node"
   type        = string
   default     = "g4dn.xlarge"
+}
+variable "ubuntu_ami_id" {
+  description = "Ubuntu 22.04 AMI ID in us-east-1"
+  type        = string
+  default     = "ami-0e1bed4f06a3b463d" # Ubuntu 22.04 LTS us-east-1 (example)
+}
+
+variable "gpu_ami_id" {
+  description = "AMI for optional GPU path"
+  type        = string
+  default     = ""
 }

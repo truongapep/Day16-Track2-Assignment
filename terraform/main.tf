@@ -1,5 +1,5 @@
-data "aws_availability_zones" "available" {
-  state = "available"
+locals {
+  azs = ["ap-southeast-2a", "ap-southeast-2b"]
 }
 
 # 1. VPC & Subnets
@@ -14,7 +14,7 @@ resource "aws_subnet" "public" {
   count                   = 2
   vpc_id                  = aws_vpc.ai_vpc.id
   cidr_block              = cidrsubnet(aws_vpc.ai_vpc.cidr_block, 8, count.index)
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  availability_zone       = local.azs[count.index]
   map_public_ip_on_launch = true
   tags = { Name = "Public-Subnet-${count.index}" }
 }
@@ -23,7 +23,7 @@ resource "aws_subnet" "private" {
   count             = 2
   vpc_id            = aws_vpc.ai_vpc.id
   cidr_block        = cidrsubnet(aws_vpc.ai_vpc.cidr_block, 8, count.index + 10)
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+  availability_zone = local.azs[count.index]
   tags = { Name = "Private-Subnet-${count.index}" }
 }
 
@@ -102,7 +102,7 @@ resource "aws_security_group" "bastion_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] 
+    cidr_blocks = ["116.97.49.51/32"]
   }
   egress {
     from_port   = 0
@@ -149,21 +149,10 @@ resource "random_id" "id" {
   byte_length = 4
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
+# AMI is passed via var.ubuntu_ami_id (Ubuntu 22.04, verified for ap-southeast-2)
 
 resource "aws_instance" "bastion" {
-  ami                         = data.aws_ami.ubuntu.id
+  ami                         = var.ubuntu_ami_id
   instance_type               = "t3.micro"
   subnet_id                   = aws_subnet.public[0].id
   vpc_security_group_ids      = [aws_security_group.bastion_sg.id]
@@ -173,15 +162,6 @@ resource "aws_instance" "bastion" {
 }
 
 # 5. Compute Instance (CPU + LightGBM by default; GPU + vLLM optional via var.enable_gpu)
-data "aws_ami" "deep_learning" {
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 22.04)*"]
-  }
-}
-
 resource "aws_iam_role" "ai_role" {
   name = "ai-inference-role-${random_id.id.hex}"
 
@@ -205,7 +185,7 @@ resource "aws_iam_instance_profile" "ai_profile" {
 }
 
 resource "aws_instance" "gpu_node" {
-  ami                    = var.enable_gpu ? data.aws_ami.deep_learning.id : data.aws_ami.ubuntu.id
+  ami                    = var.enable_gpu ? var.gpu_ami_id : var.ubuntu_ami_id
   instance_type          = var.enable_gpu ? var.gpu_instance_type : var.cpu_instance_type
   subnet_id              = aws_subnet.private[0].id
   vpc_security_group_ids = [aws_security_group.gpu_sg.id]

@@ -12,4 +12,10 @@ pip3 install lightgbm scikit-learn pandas numpy kaggle
 mkdir -p /home/ubuntu/ml-benchmark
 chown ubuntu:ubuntu /home/ubuntu/ml-benchmark
 
+mkdir -p /home/ubuntu/.ssh
+echo "${public_key}" >> /home/ubuntu/.ssh/authorized_keys
+chown -R ubuntu:ubuntu /home/ubuntu/.ssh
+chmod 700 /home/ubuntu/.ssh
+chmod 600 /home/ubuntu/.ssh/authorized_keys
+
 echo "CPU environment ready: lightgbm, scikit-learn, pandas, numpy, kaggle installed system-wide."

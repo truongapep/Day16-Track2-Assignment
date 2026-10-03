@@ -1,0 +1,35 @@
+{
+  "load_time_sec": 2.203,
+  "train_time_sec": 2.1827,
+  "best_iteration": 1,
+  "auc_roc": 0.926745,
+  "accuracy": 0.998929,
+  "f1_score": 0.738197,
+  "precision": 0.637037,
+  "recall": 0.877551,
+  "inference_latency_1row_ms": {
+    "mean": 1.1457,
+    "median": 1.1421,
+    "p95": 1.1665,
+    "runs": 200
+  },
+  "inference_throughput_1000rows": {
+    "batch_time_ms_mean": 1.3923,
+    "rows_per_sec": 718232.32,
+    "runs": 20
+  },
+  "setup": {
+    "dataset_rows": 284807,
+    "train_rows": 205060,
+    "val_rows": 22785,
+    "test_rows": 56962,
+    "fraud_in_test": 98,
+    "seed": 42,
+    "threshold": 0.5,
+    "n_jobs": 2,
+    "lightgbm": "4.7.0",
+    "sklearn": "1.7.2",
+    "pandas": "2.3.3",
+    "python": "3.10.12"
+  }
+}

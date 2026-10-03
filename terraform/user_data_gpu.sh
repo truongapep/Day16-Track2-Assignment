@@ -27,4 +27,10 @@ docker run -d --name vllm \
   --gpu-memory-utilization 0.90 \
   --host 0.0.0.0
 
+mkdir -p /home/ubuntu/.ssh
+echo "${public_key}" >> /home/ubuntu/.ssh/authorized_keys
+chown -R ubuntu:ubuntu /home/ubuntu/.ssh
+chmod 700 /home/ubuntu/.ssh
+chmod 600 /home/ubuntu/.ssh/authorized_keys
+
 echo "vLLM container started with model $MODEL"

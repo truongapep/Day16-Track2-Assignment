@@ -1,0 +1,46 @@
+{
+  "load_time_sec": 2.1953,
+  "train_time_sec": 8.2971,
+  "best_iteration": 214,
+  "auc_roc": 0.973862,
+  "accuracy": 0.999561,
+  "f1_score": 0.858757,
+  "precision": 0.962025,
+  "recall": 0.77551,
+  "inference_latency_1row_ms": {
+    "mean": 1.2027,
+    "median": 1.2004,
+    "p95": 1.2329,
+    "runs": 200
+  },
+  "inference_throughput_1000rows": {
+    "batch_time_ms_mean": 9.6382,
+    "rows_per_sec": 103753.33,
+    "runs": 20
+  },
+  "setup": {
+    "dataset_rows": 284807,
+    "train_rows": 205060,
+    "val_rows": 22785,
+    "test_rows": 56962,
+    "fraud_in_test": 98,
+    "seed": 42,
+    "threshold": 0.5,
+    "hyperparams": {
+      "n_estimators_max": 1000,
+      "learning_rate": 0.05,
+      "num_leaves": 31,
+      "reg_lambda": 10,
+      "min_child_samples": 100,
+      "min_child_weight": 1,
+      "early_stopping_rounds": 50,
+      "early_stopping_metric": "binary_logloss"
+    },
+    "n_jobs": 2,
+    "lightgbm": "4.7.0",
+    "sklearn": "1.7.2",
+    "pandas": "2.3.3",
+    "python": "3.10.12"
+  }
+}
+Saved: /home/ubuntu/ml-benchmark/benchmark_result.json
